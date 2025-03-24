@@ -3,5 +3,6 @@
     "rust-analyzer.checkOnSave.extraArgs": [
         "--target",
         "x86_64-blog_os.json"
-    ]
+    ],
+    "editor.formatOnSave": true,
 }

@@ -1,7 +1,7 @@
-use volatile::Volatile;
 use core::fmt;
 use lazy_static::lazy_static;
 use spin::Mutex;
+use volatile::Volatile;
 
 #[allow(dead_code)]
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -11,7 +11,7 @@ pub enum Color {
     Blue = 1,
     Green = 2,
     Cyan = 3,
-    Red = 4, 
+    Red = 4,
     Magenta = 5,
     Brown = 6,
     LightGray = 7,
@@ -22,7 +22,7 @@ pub enum Color {
     LightRed = 12,
     Pink = 13,
     Yellow = 14,
-    White = 15
+    White = 15,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -47,7 +47,7 @@ const BUFFER_WIDTH: usize = 80;
 
 #[repr(transparent)]
 struct Buffer {
-    chars: [[Volatile<ScreenChar>; BUFFER_WIDTH]; BUFFER_HEIGHT]
+    chars: [[Volatile<ScreenChar>; BUFFER_WIDTH]; BUFFER_HEIGHT],
 }
 
 pub struct Writer {
@@ -64,14 +64,14 @@ impl Writer {
                 if self.column_position >= BUFFER_WIDTH {
                     self.new_line();
                 }
-                
+
                 let row: usize = BUFFER_HEIGHT - 1;
                 let col: usize = self.column_position;
 
                 let color_code = self.color_code;
                 self.buffer.chars[row][col].write(ScreenChar {
                     ascii_character: byte,
-                    color_code
+                    color_code,
                 });
                 self.column_position += 1;
             }
@@ -100,9 +100,9 @@ impl Writer {
     }
 
     fn clear_row(&mut self, row: usize) {
-        let blank: ScreenChar = ScreenChar { 
-            ascii_character: b' ', 
-            color_code: self.color_code 
+        let blank: ScreenChar = ScreenChar {
+            ascii_character: b' ',
+            color_code: self.color_code,
         };
         for col in 0..BUFFER_WIDTH {
             self.buffer.chars[row][col].write(blank);
@@ -121,9 +121,7 @@ lazy_static! {
     pub static ref WRITER: Mutex<Writer> = Mutex::new(Writer {
         column_position: 0,
         color_code: ColorCode::new(Color::Green, Color::Black),
-        buffer: unsafe {
-            &mut *(0xb8000 as *mut Buffer)
-        },
+        buffer: unsafe { &mut *(0xb8000 as *mut Buffer) },
     });
 }
 

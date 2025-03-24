@@ -5,9 +5,9 @@ mod vga_buffer;
 
 static HELLO: &[u8] = b"Hello World";
 
-#[no_mangle]    // don't mangle the function name
+// this function is the entry point, since the linker looks for a function named _start
+#[no_mangle] // don't mangle the function name
 pub extern "C" fn _start() -> ! {
-    // this function is the entry point, since the linker looks for a function named _start
     let vga_buffer: *mut u8 = 0xb8000 as *mut u8;
 
     for (i, &byte) in HELLO.iter().enumerate() {
