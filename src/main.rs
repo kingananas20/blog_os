@@ -4,7 +4,7 @@
 #![test_runner(blog_os::test_runner)]
 #![reexport_test_harness_main = "test_main"]
 
-use blog_os::{println, vga_buffer::Color, vga_set_color};
+use blog_os::{hlt_loop, println, vga_buffer::Color, vga_set_color};
 
 // this function is the entry point, since the linker looks for a function named _start
 #[no_mangle] // don't mangle the function name
@@ -18,7 +18,7 @@ pub extern "C" fn _start() -> ! {
 
     println!("It did not crash");
 
-    loop {}
+    hlt_loop()
 }
 
 // this function is called on panic
