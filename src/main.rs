@@ -9,11 +9,14 @@ use blog_os::println;
 // this function is the entry point, since the linker looks for a function named _start
 #[no_mangle] // don't mangle the function name
 pub extern "C" fn _start() -> ! {
-    println!("Hello World!");
+    println!("Hello World{}", "!");
+
+    blog_os::init();
 
     #[cfg(test)]
     test_main();
 
+    println!("It did not crash");
     loop {}
 }
 
