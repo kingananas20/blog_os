@@ -27,6 +27,10 @@ test-timeout = 60
 name = "should_panic"
 harness = false
 
+[[test]]
+name = "stack_overflow"
+harness = false
+
 [profile.dev]
 
 [profile.release]
