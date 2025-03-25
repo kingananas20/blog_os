@@ -1,10 +1,12 @@
 #![no_std]
+#![feature(raw_ref_op)]
 #![cfg_attr(test, no_main)]
 #![feature(abi_x86_interrupt)]
 #![feature(custom_test_frameworks)]
 #![test_runner(crate::test_runner)]
 #![reexport_test_harness_main = "test_main"]
 
+pub mod gdt;
 pub mod interrupts;
 pub mod serial;
 pub mod vga_buffer;
@@ -13,6 +15,7 @@ use core::panic::PanicInfo;
 
 pub fn init() {
     interrupts::init_idt();
+    gdt::init();
 }
 
 pub trait Testable {

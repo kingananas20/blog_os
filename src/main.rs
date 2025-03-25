@@ -9,12 +9,18 @@ use blog_os::{println, vga_buffer::Color, vga_set_color};
 // this function is the entry point, since the linker looks for a function named _start
 #[no_mangle] // don't mangle the function name
 pub extern "C" fn _start() -> ! {
-    println!("Hello World!");
-
     blog_os::init();
 
     #[cfg(test)]
     test_main();
+
+    println!("Hello World!");
+
+    fn stack_overflow() {
+        stack_overflow();
+    }
+
+    stack_overflow();
 
     println!("It did not crash");
     loop {}
