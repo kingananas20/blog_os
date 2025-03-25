@@ -108,6 +108,10 @@ impl Writer {
             self.buffer.chars[row][col].write(blank);
         }
     }
+
+    pub fn set_color(&mut self, foreground: Color, background: Color) {
+        self.color_code = ColorCode::new(foreground, background);
+    }
 }
 
 impl fmt::Write for Writer {
@@ -120,7 +124,7 @@ impl fmt::Write for Writer {
 lazy_static! {
     pub static ref WRITER: Mutex<Writer> = Mutex::new(Writer {
         column_position: 0,
-        color_code: ColorCode::new(Color::Green, Color::Black),
+        color_code: ColorCode::new(Color::White, Color::Black),
         buffer: unsafe { &mut *(0xb8000 as *mut Buffer) },
     });
 }
@@ -140,6 +144,13 @@ macro_rules! println {
 pub fn _print(args: fmt::Arguments) {
     use core::fmt::Write;
     WRITER.lock().write_fmt(args).unwrap();
+}
+
+#[macro_export]
+macro_rules! vga_set_color {
+    ($fg:expr, $bg:expr) => {
+        $crate::vga_buffer::WRITER.lock().set_color($fg, $bg);
+    };
 }
 
 #[test_case]

@@ -4,12 +4,12 @@
 #![test_runner(blog_os::test_runner)]
 #![reexport_test_harness_main = "test_main"]
 
-use blog_os::println;
+use blog_os::{println, vga_buffer::Color, vga_set_color};
 
 // this function is the entry point, since the linker looks for a function named _start
 #[no_mangle] // don't mangle the function name
 pub extern "C" fn _start() -> ! {
-    println!("Hello World{}", "!");
+    println!("Hello World!");
 
     blog_os::init();
 
@@ -24,6 +24,7 @@ pub extern "C" fn _start() -> ! {
 #[cfg(not(test))]
 #[panic_handler]
 fn panic(info: &core::panic::PanicInfo) -> ! {
+    vga_set_color!(Color::Red, Color::Black);
     println!("{}", info);
     loop {}
 }
