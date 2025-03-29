@@ -5,10 +5,16 @@
 #![reexport_test_harness_main = "test_main"]
 
 use blog_os::{hlt_loop, println, vga_buffer::Color, vga_set_color};
+use bootloader::{entry_point, BootInfo};
+use x86_64::structures::paging::Page;
+
+entry_point!(kernel_main);
 
 // this function is the entry point, since the linker looks for a function named _start
 #[no_mangle] // don't mangle the function name
-pub extern "C" fn _start() -> ! {
+fn kernel_main(boot_info: &'static BootInfo) -> ! {
+    use blog_os::memory;
+    use x86_64::VirtAddr;
     blog_os::init();
 
     #[cfg(test)]
@@ -17,7 +23,6 @@ pub extern "C" fn _start() -> ! {
     println!("Hello World!");
 
     println!("It did not crash");
-
     hlt_loop()
 }
 
